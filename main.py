@@ -117,33 +117,44 @@ async def sync_member_nick(member):
 
 # --- 6. ADMIN COMMANDS ---
 
+import asyncio # Add this at the top of your script
+
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def syncall(ctx):
-    """Updates every member in the server based on their current roles."""
-    await ctx.send("🔄 Starting server-wide sync... this may take a moment.")
+    """Updates every member with a safe delay to avoid rate limits."""
+    await ctx.send("🔄 Starting safe sync (1.5s delay per member). This will take a while...")
+    
     count = 0
+    # guild.members requires the 'members' intent to be enabled
     for member in ctx.guild.members:
         if member.bot: continue
+        
         await sync_member_nick(member)
         count += 1
-    await ctx.send(f"✅ Sync complete! Re-styled {count} members.")
+        
+        # This prevents the bot from being banned for spamming API requests
+        await asyncio.sleep(1.5) 
+
+    await ctx.send(f"✅ Sync complete! Attempted to style {count} members.")
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def clearall(ctx):
-    """Removes all bot-given nicknames and resets everyone to their original name."""
-    await ctx.send("🧹 Clearing all nicknames...")
+    """Resets all nicknames to original names with a safe delay."""
+    await ctx.send("🧹 Clearing all nicknames safely...")
+    
     count = 0
     for member in ctx.guild.members:
         if member.nick is not None:
             try:
                 await member.edit(nick=None)
                 count += 1
+                await asyncio.sleep(1.5)
             except discord.Forbidden:
                 continue
+                
     await ctx.send(f"✅ Cleaned up {count} nicknames.")
-
 
 
 
