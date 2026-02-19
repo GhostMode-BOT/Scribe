@@ -32,6 +32,13 @@ def to_asian_style(text):
     )
     return text.translate(mapping)
 
+def to_mixed(text):
+    mapping = str.maketrans(
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        "ΔβĆĐ€₣ǤĦƗĴҜŁΜŇØƤΩŘŞŦỮVŴЖ¥ŽΔβĆĐ€₣ǤĦƗĴҜŁΜŇØƤΩŘŞŦỮVŴЖ¥Ž"
+    )
+    return text.translate(mapping)
+
 def to_medieval(text):
     mapping = str.maketrans(
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -65,11 +72,11 @@ def to_circled(text):
 ROLE_STYLES = {
     "OWNER": {"prefix": "👑 ", "transform": to_medieval},
     "MC PLAYER": {"transform": to_antique},
-    "IRON": {"prefix": "🧲","transform": to_asian_style},
+    "IRON": {"prefix": "🧲 ","transform": to_asian_style},
     "DIAMOND": {"prefix": "💎 ", "transform": to_circled},
     "NETHERITE": {"prefix": "🔥 ", "transform": to_monospace},
     "SUS": {"prefix": "ඞ ", "transform": None},
-    "NOOB": {"prefix": " [L] ", "transform": None},
+    "NOOB": {"prefix": " <:noob:1473994138386169988> ", "transform": to_mixed},
     "COPPER": {"prefix": "🤎 ", "transform": None}
 }
 
