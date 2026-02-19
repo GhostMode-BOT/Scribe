@@ -144,7 +144,7 @@ async def syncall(interaction: discord.Interaction):
     if not interaction.user.guild_permissions.administrator:
         return await interaction.response.send_message("❌ Admin only!", ephemeral=True)
 
-    await interaction.response.defer(ephemeral=True)
+    await interaction.response.defer(ephemeral=False)
     
     # Get list of non-bot members
     members = [m for m in interaction.guild.members if not m.bot]
@@ -175,7 +175,7 @@ async def clearall(interaction: discord.Interaction):
         return await interaction.response.send_message("❌ Admin only!", ephemeral=True)
 
     # 2. Defer (Tells Discord to wait while we loop)
-    await interaction.response.defer(ephemeral=True)
+    await interaction.response.defer(ephemeral=False)
     
     # 3. Get members with nicknames
     members_with_nicks = [m for m in interaction.guild.members if m.nick is not None]
