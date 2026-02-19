@@ -76,7 +76,7 @@ ROLE_STYLES = {
     "DIAMOND": {"prefix": "💎 ", "transform": to_circled},
     "NETHERITE": {"prefix": "🔥 ", "transform": to_monospace},
     "SUS": {"prefix": "ඞ ", "transform": None},
-    "NOOB": {"prefix": " <:noob:1473994138386169988> ", "transform": to_mixed},
+    "NOOB": {"prefix": "🦍 ", "transform": to_mixed},
     "COPPER": {"prefix": "🤎 ", "transform": None}
 }
 
