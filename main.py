@@ -168,6 +168,41 @@ async def syncall(interaction: discord.Interaction):
 
     await message.edit(content=f"✅ **Sync Complete!**\n{make_progress_bar(total, total)}\nUpdated {total} members.")
 
+@bot.tree.command(name="clearall", description="Reset everyone to their original display names safely")
+async def clearall(interaction: discord.Interaction):
+    # 1. Permission Check
+    if not interaction.user.guild_permissions.administrator:
+        return await interaction.response.send_message("❌ Admin only!", ephemeral=True)
+
+    # 2. Defer (Tells Discord to wait while we loop)
+    await interaction.response.defer(ephemeral=True)
+    
+    # 3. Get members with nicknames
+    members_with_nicks = [m for m in interaction.guild.members if m.nick is not None]
+    total = len(members_with_nicks)
+
+    if total == 0:
+        return await interaction.followup.send("✅ Everyone already has their original name!")
+
+    message = await interaction.followup.send(f"🧹 **Clearing Nicknames...**\n{make_progress_bar(0, total)}")
+    
+    count = 0
+    for member in members_with_nicks:
+        try:
+            await member.edit(nick=None)
+            count += 1
+            
+            # Update progress bar every 5 resets
+            if count % 5 == 0 or count == total:
+                await message.edit(content=f"🧹 **Clearing Nicknames...**\n{make_progress_bar(count, total)}")
+            
+            # Safety delay to avoid Discord rate limits
+            await asyncio.sleep(1.5)
+        except discord.Forbidden:
+            continue
+                
+    await message.edit(content=f"✅ **Cleanup Complete!**\nRestored **{count}** members to their original names.")
+
 # --- 7. THE FIX: RELIABLE SYNCING ---
 
 @bot.event
