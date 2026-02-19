@@ -3,6 +3,7 @@ from discord.ext import commands
 from flask import Flask
 from threading import Thread
 import os
+import asyncio
 
 # --- 1. WEB SERVER FOR RENDER/UPTIMEROBOT ---
 app = Flask('')
@@ -115,37 +116,49 @@ async def sync_member_nick(member):
 
 
 
-# --- 6. ADMIN COMMANDS ---
 
-import asyncio # Add this at the top of your script
+# --- 6. SLASH COMMANDS ---
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def syncall(ctx):
-    """Updates every member with a safe delay to avoid rate limits."""
-    await ctx.send("🔄 Starting safe sync (1.5s delay per member). This will take a while...")
+@bot.tree.command(name="syncall", description="Safely update all member nicknames (1.5s delay)")
+async def syncall(interaction: discord.Interaction):
+    # Check for Admin permissions
+    if not interaction.user.guild_permissions.administrator:
+        return await interaction.response.send_message("❌ You need Administrator permissions to use this!", ephemeral=True)
+
+    # Tell Discord to wait while we loop (avoids "interaction failed")
+    await interaction.response.defer(ephemeral=True)
+    
+    await interaction.followup.send("🔄 Starting safe sync. I will notify you here when finished.")
     
     count = 0
-    # guild.members requires the 'members' intent to be enabled
-    for member in ctx.guild.members:
+    members = interaction.guild.members
+    total = len([m for m in members if not m.bot])
+
+    for member in members:
         if member.bot: continue
         
         await sync_member_nick(member)
         count += 1
         
-        # This prevents the bot from being banned for spamming API requests
+        # Log progress every 10 members
+        if count % 10 == 0:
+            print(f"Sync Progress: {count}/{total}")
+        
+        # The safety breather
         await asyncio.sleep(1.5) 
 
-    await ctx.send(f"✅ Sync complete! Attempted to style {count} members.")
+    await interaction.followup.send(f"✅ Finished! Successfully synced **{count}** members.")
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def clearall(ctx):
-    """Resets all nicknames to original names with a safe delay."""
-    await ctx.send("🧹 Clearing all nicknames safely...")
+@bot.tree.command(name="clearall", description="Reset everyone to their original display names")
+async def clearall(interaction: discord.Interaction):
+    if not interaction.user.guild_permissions.administrator:
+        return await interaction.response.send_message("❌ Admin only!", ephemeral=True)
+
+    await interaction.response.defer(ephemeral=True)
+    await interaction.followup.send("🧹 Clearing all nicknames safely...")
     
     count = 0
-    for member in ctx.guild.members:
+    for member in interaction.guild.members:
         if member.nick is not None:
             try:
                 await member.edit(nick=None)
@@ -154,8 +167,7 @@ async def clearall(ctx):
             except discord.Forbidden:
                 continue
                 
-    await ctx.send(f"✅ Cleaned up {count} nicknames.")
-
+    await interaction.followup.send(f"✅ Cleaned up **{count}** nicknames.")
 
 
 # --- EVENTS ---
