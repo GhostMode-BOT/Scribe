@@ -35,7 +35,7 @@ FONT_MAP = {
 # Your initial configuration
 ROLE_STYLES = {
     "OWNER": {"prefix": "👑 ", "transform": FONT_MAP["medieval"]},
-    "MC PLAYER": {"prefix": "🌏 " "transform": FONT_MAP["antique"]},
+    "MC PLAYER": {"prefix": "🌏 ", "transform": FONT_MAP["antique"]},
     "IRON": {"prefix": "🧲 ","transform": FONT_MAP["asian"]},
     "DIAMOND": {"prefix": "💎 ", "transform": FONT_MAP["circled"]},
     "NETHERITE": {"prefix": "🔥 ", "transform": FONT_MAP["monospace"]},
