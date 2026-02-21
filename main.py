@@ -18,7 +18,7 @@ def keep_alive(): Thread(target=run).start()
 # --- 2. BOT SETUP ---
 intents = discord.Intents.default()
 intents.members = True 
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents, activity=discord.Game(name="Decorating Member Profile......"))
 
 # --- 3. FONT TRANSFORMERS ---
 # We put these in a dictionary so the command can find them by name
