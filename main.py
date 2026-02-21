@@ -6,6 +6,7 @@ import os
 import asyncio
 from discord import app_commands
 
+
 # --- 1. WEB SERVER ---
 app = Flask('')
 @app.route('/')
