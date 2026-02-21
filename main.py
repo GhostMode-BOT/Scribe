@@ -34,13 +34,13 @@ FONT_MAP = {
 # Your initial configuration
 ROLE_STYLES = {
     "OWNER": {"prefix": "👑 ", "transform": FONT_MAP["medieval"]},
-    "MC PLAYER": {"transform": FONT_MAP["antique"]},
+    "MC PLAYER": {"prefix": "🌏 " "transform": FONT_MAP["antique"]},
     "IRON": {"prefix": "🧲 ","transform": FONT_MAP["asian"]},
     "DIAMOND": {"prefix": "💎 ", "transform": FONT_MAP["circled"]},
     "NETHERITE": {"prefix": "🔥 ", "transform": FONT_MAP["monospace"]},
     "SUS": {"prefix": "ඞ ", "transform": FONT_MAP["none"]},
-    "NOOB": {"prefix": "🦍 ", "transform": FONT_MAP["mixed"]},
-    "COPPER": {"prefix": "🤎 ", "transform": FONT_MAP["none"]}
+    "NOOB": {"prefix": "☠️ ", "transform": FONT_MAP["mixed"]},
+    "COPPER": {"prefix": "🤨 ", "transform": FONT_MAP["none"]}
 }
 
 # --- 4. HELPERS ---
